@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using AETProject.Models;
 using System.Web.Script.Serialization;
-using System.Net.Mail;
 
 namespace WebApplication1.Controllers
 {
@@ -92,42 +91,8 @@ namespace WebApplication1.Controllers
             Response.Redirect(Googleurl);
         }
 
-
-        public async Task<string> Mail()
-        {
-            if (ModelState.IsValid)
-            {
-                string randomToken = System.Web.Security.Membership.GeneratePassword(20, 5);
-
-                var body = "<h4>Dear .</h4>Thank your interest in the Accenture Education Trust. Please click the button bellow to verify your email <br><a href='http://localhost:60409/Email/Verify?token=" + randomToken + "'>verify email</a>";
-                var message = new MailMessage();
-                message.To.Add(new MailAddress("3441355@myuwc.ac.za"));  // replace with valid value 
-                message.From = new MailAddress("laviusmotileng@gmail.com");  // replace with valid value
-                message.Subject = "Email verification";
-                message.Body = string.Format(body, "", "", "");
-                message.IsBodyHtml = true;
-
-                using (var smtp = new SmtpClient())
-                {
-                    var credential = new NetworkCredential
-                    {
-                        UserName = "laviusmotileng@gmail.com",  // replace with valid value
-                        Password = "3712lav123"  // replace with valid value
-                    };
-                    smtp.Credentials = credential;
-                    smtp.Host = "smtp-mail.outlook.com";
-                    smtp.Port = 587;
-                    smtp.EnableSsl = true;
-                    await smtp.SendMailAsync(message);
-                    //return RedirectToAction("Sent");
-                }
-            }
-            return "done";
-        }
-
-
         [HttpPost]
-        public async Task<string> Register(string titleForm, string firstName, string surname, string email, string cell, string password, string ConfirmPassword, string province, string streetName, string township, string city, string citycode)
+        public void Register(string titleForm, string firstName, string surname, string email, string cell, string password, string ConfirmPassword, string province, string streetName, string township, string city, string citycode)
         {
             User user = user = new User { firstName = firstName, lastName = firstName, email = email, title = titleForm, cellPhoneNumber = cell, password = password };
             if (password.Equals(ConfirmPassword))
@@ -139,7 +104,6 @@ namespace WebApplication1.Controllers
                     Response.Redirect("../Home/Conflict");
                 }
                 else {
-                    await tmp.Mail(tmp, tmp.emailVerToken);
                     Session["userId"] = tmp.userId;
                     Session["firstName"] = tmp.firstName;
                     Session["lastName"] = tmp.lastName;
@@ -153,7 +117,6 @@ namespace WebApplication1.Controllers
             else {
                 Response.Redirect("../Home/PasswordError");
             }
-            return "done";
             //return RedirectToAction("../Dashboard/Index");
         }
 

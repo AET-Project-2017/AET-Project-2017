@@ -9,7 +9,7 @@ namespace WebApplication1.Models
 {
     public class DBConfig : DbContext
     {
-        public DBConfig() : base("AETFinalDBV1D") { }
+        public DBConfig() : base("AETFinalDBV1B") { }
         public DbSet<User> User { get; set; }
         public DbSet<Address> Adress { get; set; }
     }
